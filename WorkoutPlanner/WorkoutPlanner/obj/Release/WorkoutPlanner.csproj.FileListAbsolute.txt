@@ -1,0 +1,11 @@
+D:\RP\WorkoutPlanner\WorkoutPlanner\obj\Release\WorkoutPlanner.csproj.AssemblyReference.cache
+D:\RP\WorkoutPlanner\WorkoutPlanner\obj\Release\WorkoutPlanner.Form1.resources
+D:\RP\WorkoutPlanner\WorkoutPlanner\obj\Release\WorkoutPlanner.Form2.resources
+D:\RP\WorkoutPlanner\WorkoutPlanner\obj\Release\WorkoutPlanner.Properties.Resources.resources
+D:\RP\WorkoutPlanner\WorkoutPlanner\obj\Release\WorkoutPlanner.csproj.GenerateResource.cache
+D:\RP\WorkoutPlanner\WorkoutPlanner\obj\Release\WorkoutPlanner.csproj.CoreCompileInputs.cache
+D:\RP\WorkoutPlanner\WorkoutPlanner\bin\Release\WorkoutPlanner.exe.config
+D:\RP\WorkoutPlanner\WorkoutPlanner\bin\Release\WorkoutPlanner.exe
+D:\RP\WorkoutPlanner\WorkoutPlanner\bin\Release\WorkoutPlanner.pdb
+D:\RP\WorkoutPlanner\WorkoutPlanner\obj\Release\WorkoutPlanner.exe
+D:\RP\WorkoutPlanner\WorkoutPlanner\obj\Release\WorkoutPlanner.pdb
