@@ -8,64 +8,79 @@ namespace WorkoutPlanner
 {
     public partial class Form1 : Form
     {
+        // Сервис для работы с данными тренировок
         private readonly WorkoutService _workoutService;
 
+        // Конструктор главной формы
         public Form1()
         {
-            InitializeComponent(); // Вызов автоматически сгенерированного метода
+            // Инициализация компонентов формы (созданных в дизайнере)
+            InitializeComponent();
+            // Создание экземпляра сервиса для работы с данными
             _workoutService = new WorkoutService();
+            // Загрузка начальных данных
             InitializeData();
         }
 
+        // Инициализация данных при запуске формы
         private void InitializeData()
         {
-            LoadWorkoutPlans();
-            LoadActivityHistory();
+            LoadWorkoutPlans();    // Загрузка планов тренировок
+            LoadActivityHistory(); // Загрузка истории активности
         }
 
+        // Загрузка списка планов тренировок в listBox1
         private void LoadWorkoutPlans()
         {
-            listBox1.Items.Clear(); // Планы тренировок
-            var plans = _workoutService.GetWorkoutPlans();
+            listBox1.Items.Clear(); // Очистка списка перед загрузкой
+            var plans = _workoutService.GetWorkoutPlans(); // Получение планов из сервиса
 
+            // Добавление каждого плана в список
             foreach (var plan in plans)
             {
                 listBox1.Items.Add(plan);
             }
 
+            // Автоматический выбор первого элемента, если список не пуст
             if (listBox1.Items.Count > 0)
                 listBox1.SelectedIndex = 0;
         }
 
+        // Загрузка истории выполненных упражнений в listBox3
         private void LoadActivityHistory()
         {
-            listBox3.Items.Clear(); // История активности
-            var history = _workoutService.GetActivityHistory();
+            listBox3.Items.Clear(); // Очистка списка перед загрузкой
+            var history = _workoutService.GetActivityHistory(); // Получение истории из сервиса
 
+            // Добавление каждого упражнения в список истории
             foreach (var exercise in history)
             {
                 listBox3.Items.Add(exercise);
             }
 
-            // Обновляем статистику
+            // Обновление статистики (количества записей)
             UpdateHistoryStats();
         }
 
+        // Обновление статистики истории активности
         private void UpdateHistoryStats()
         {
             var history = _workoutService.GetActivityHistory();
-            int totalExercises = history.Count;
+            int totalExercises = history.Count; // Подсчет общего количества упражнений
 
-            // Обновляем заголовок вкладки с количеством записей
+            // Обновление заголовка вкладки с отображением количества записей
             tabPage2.Text = $"История активности ({totalExercises})";
         }
 
+        // Загрузка упражнений выбранного плана тренировок в listBox2
         private void LoadExercisesForSelectedPlan()
         {
-            listBox2.Items.Clear(); // Упражнения плана
+            listBox2.Items.Clear(); // Очистка списка упражнений
 
+            // Проверка, что выбранный элемент является планом тренировки
             if (listBox1.SelectedItem is Models.WorkoutPlan selectedPlan)
             {
+                // Добавление каждого упражнения из выбранного плана
                 foreach (var exercise in selectedPlan.Exercises)
                 {
                     listBox2.Items.Add(exercise);
@@ -73,37 +88,44 @@ namespace WorkoutPlanner
             }
         }
 
-        // Обработчики событий
+        // Обработчик события изменения выбранного плана тренировок
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadExercisesForSelectedPlan();
+            LoadExercisesForSelectedPlan(); // Загрузка упражнений для нового выбранного плана
         }
 
-        private void button1_Click(object sender, EventArgs e) // Добавить упражнение
+        // Обработчик нажатия кнопки "Добавить упражнение"
+        private void button1_Click(object sender, EventArgs e)
         {
+            // Создание и отображение формы добавления упражнения
             Form2 addForm = new Form2(_workoutService);
             if (addForm.ShowDialog() == DialogResult.OK)
             {
+                // Если упражнение успешно добавлено, обновляем историю
                 LoadActivityHistory();
                 MessageBox.Show("Упражнение успешно добавлено в историю!", "Успех",
                               MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
-        private void button2_Click(object sender, EventArgs e) // Обновить
+        // Обработчик нажатия кнопки "Обновить"
+        private void button2_Click(object sender, EventArgs e)
         {
-            InitializeData();
+            InitializeData(); // Полная перезагрузка данных
         }
 
-        private void button3_Click(object sender, EventArgs e) // Очистить историю
+        // Обработчик нажатия кнопки "Очистить историю"
+        private void button3_Click(object sender, EventArgs e)
         {
-            ClearHistory();
+            ClearHistory(); // Вызов метода очистки истории
         }
 
+        // Метод полной очистки истории активности
         private void ClearHistory()
         {
             var history = _workoutService.GetActivityHistory();
 
+            // Проверка, есть ли что очищать
             if (history.Count == 0)
             {
                 MessageBox.Show("История активности уже пуста!", "Информация",
@@ -117,19 +139,20 @@ namespace WorkoutPlanner
                 $"Будет удалено: {history.Count} упражнений\n" +
                 $"Последняя запись: {history.First().CompletionDate:dd.MM.yyyy HH:mm}",
                 "Подтверждение очистки истории",
-MessageBoxButtons.YesNo,
+                MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning,
-                MessageBoxDefaultButton.Button2
+                MessageBoxDefaultButton.Button2 // По умолчанию выбрана кнопка "Нет"
             );
 
+            // Если пользователь подтвердил очистку
             if (result == DialogResult.Yes)
             {
                 try
                 {
-                    // Вызываем метод очистки истории в сервисе
+                    // Вызов метода очистки истории в сервисе
                     _workoutService.ClearActivityHistory();
 
-                    // Обновляем отображение
+                    // Обновление отображения
                     LoadActivityHistory();
 
                     MessageBox.Show($"История активности успешно очищена!\nУдалено записей: {history.Count}",
@@ -139,6 +162,7 @@ MessageBoxButtons.YesNo,
                 }
                 catch (Exception ex)
                 {
+                    // Обработка ошибок при очистке
                     MessageBox.Show($"Ошибка при очистке истории: {ex.Message}",
                                   "Ошибка",
                                   MessageBoxButtons.OK,
@@ -147,11 +171,12 @@ MessageBoxButtons.YesNo,
             }
         }
 
-        // Новая функция: очистка истории за определенный период
+        // Метод очистки истории за определенный период (последний месяц)
         private void ClearHistoryByDateRange()
         {
             var history = _workoutService.GetActivityHistory();
 
+            // Проверка, есть ли записи в истории
             if (history.Count == 0)
             {
                 MessageBox.Show("История активности пуста!", "Информация",
@@ -159,14 +184,16 @@ MessageBoxButtons.YesNo,
                 return;
             }
 
-            // Используем простой диалог вместо отдельной формы
+            // Установка диапазона дат (последний месяц)
             DateTime startDate = DateTime.Now.AddMonths(-1);
             DateTime endDate = DateTime.Now;
 
+            // Фильтрация упражнений за указанный период
             var exercisesToDelete = history
                 .Where(e => e.CompletionDate >= startDate && e.CompletionDate <= endDate)
                 .ToList();
 
+            // Проверка, есть ли записи за указанный период
             if (exercisesToDelete.Count == 0)
             {
                 MessageBox.Show("За последний месяц записей не найдено!", "Информация",
@@ -174,6 +201,7 @@ MessageBoxButtons.YesNo,
                 return;
             }
 
+            // Подтверждение удаления
             var result = MessageBox.Show(
                 $"Удалить все записи за последний месяц?\n\n" +
                 $"Будет удалено: {exercisesToDelete.Count} упражнений",
@@ -182,6 +210,7 @@ MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question
             );
 
+            // Если пользователь подтвердил удаление
             if (result == DialogResult.Yes)
             {
                 _workoutService.ClearActivityHistoryByDateRange(startDate, endDate);
@@ -194,51 +223,62 @@ MessageBoxButtons.YesNo,
             }
         }
 
+        // Обработчик события переключения вкладок
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab == tabPage2) // Вкладка истории
+            // Если выбрана вкладка истории, обновляем ее содержимое
+            if (tabControl1.SelectedTab == tabPage2)
             {
                 LoadActivityHistory();
             }
         }
 
-        // Контекстное меню для истории
+        // Обработчик события нажатия правой кнопки мыши на списке истории
         private void listBox3_MouseDown(object sender, MouseEventArgs e)
         {
+            // Проверка, что нажата правая кнопка мыши
             if (e.Button == MouseButtons.Right)
             {
-                // Получаем выбранный элемент
+                // Определение индекса элемента под курсором
                 int index = listBox3.IndexFromPoint(e.Location);
-                if (index != ListBox.NoMatches)
+                if (index != ListBox.NoMatches) // Если элемент найден
                 {
-                    listBox3.SelectedIndex = index;
+                    listBox3.SelectedIndex = index; // Выделение элемента
 
-                    // Создаем контекстное меню
+                    // Создание контекстного меню
                     ContextMenuStrip contextMenu = new ContextMenuStrip();
 
+                    // Пункт меню для удаления одной записи
                     var deleteItem = new ToolStripMenuItem("Удалить эту запись");
                     deleteItem.Click += (s, args) => DeleteSelectedHistoryItem();
 
+                    // Пункт меню для полной очистки истории
                     var clearAllItem = new ToolStripMenuItem("Очистить всю историю");
                     clearAllItem.Click += (s, args) => ClearHistory();
 
+                    // Пункт меню для очистки за последний месяц
                     var clearByDateItem = new ToolStripMenuItem("Очистить за последний месяц");
                     clearByDateItem.Click += (s, args) => ClearHistoryByDateRange();
 
+                    // Добавление пунктов в меню
                     contextMenu.Items.Add(deleteItem);
-                    contextMenu.Items.Add(new ToolStripSeparator());
+                    contextMenu.Items.Add(new ToolStripSeparator()); // Разделитель
                     contextMenu.Items.Add(clearAllItem);
                     contextMenu.Items.Add(clearByDateItem);
 
+                    // Отображение контекстного меню
                     contextMenu.Show(listBox3, e.Location);
                 }
             }
         }
 
+        // Метод удаления выбранной записи из истории
         private void DeleteSelectedHistoryItem()
         {
+            // Проверка, что выбранный элемент является выполненным упражнением
             if (listBox3.SelectedItem is Models.CompletedExercise selectedExercise)
             {
+                // Подтверждение удаления
                 var result = MessageBox.Show(
                     $"Удалить запись: {selectedExercise.Name}?\n" +
                     $"Дата: {selectedExercise.CompletionDate:dd.MM.yyyy HH:mm}",
@@ -247,6 +287,7 @@ MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question
                 );
 
+                // Если пользователь подтвердил удаление
                 if (result == DialogResult.Yes)
                 {
                     _workoutService.DeleteHistoryItem(selectedExercise.Id);
@@ -259,8 +300,3 @@ MessageBoxButtons.YesNo,
         }
     }
 }
-
-
-
-
-

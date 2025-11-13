@@ -53,3 +53,4 @@ D:\RP\WorkoutPlanner\WorkoutPlanner\obj\Debug\WorkoutPlanner.pdb
 D:\RP\WorkoutPlanner\WorkoutPlanner\bin\Debug\WorkoutPlanner.exe.config
 D:\RP\WorkoutPlanner\WorkoutPlanner\bin\Debug\WorkoutPlanner.exe
 D:\RP\WorkoutPlanner\WorkoutPlanner\bin\Debug\WorkoutPlanner.pdb
+D:\RP\WorkoutPlanner\WorkoutPlanner\obj\Debug\WorkoutPlanner.exe.config
